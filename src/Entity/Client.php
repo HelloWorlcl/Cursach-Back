@@ -3,10 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
- * @ORM\Table(name="client")
+ * @ORM\Table(name="clients")
  */
 class Client
 {
@@ -28,15 +29,9 @@ class Client
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true, unique=true)
+     * @Assert\Email()
      */
     private $email;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255)
-     */
-    private $password;
 
     /**
      * @var string
@@ -103,26 +98,6 @@ class Client
     public function setEmail(?string $email): Client
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    /**
-     * @param string $password
-     *
-     * @return Client
-     */
-    public function setPassword(string $password): Client
-    {
-        $this->password = $password;
 
         return $this;
     }

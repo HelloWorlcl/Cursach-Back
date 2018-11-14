@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class ClientType extends AbstractType
 {
@@ -18,7 +19,6 @@ class ClientType extends AbstractType
         $builder
             ->add('name', null, ['required' => true])
             ->add('email', EmailType::class)
-            ->add('password', null, ['required' => true])
             ->add('phone', TelType::class, ['required' => true])
             ->add('address')
             ->add('avatar')
