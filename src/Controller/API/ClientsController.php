@@ -20,9 +20,9 @@ class ClientsController extends Controller
      */
     public function index()
     {
-        $em = $this->getDoctrine()->getRepository(Client::class);
+        $repository = $this->getDoctrine()->getRepository(Client::class);
 
-        return $this->json($em->findAll());
+        return $this->json($repository->findAll());
     }
 
     /**
@@ -47,28 +47,23 @@ class ClientsController extends Controller
     public function new(Request $request, ValidatorInterface $validator)
     {
         $serializer = $this->get('serializer');
-        /** @var Client $data */
-        $data = $serializer->deserialize($request->getContent(), Client::class, self::JSON_FORMAT);
+        $client = $serializer->deserialize(
+            $request->getContent(),
+            Client::class,
+            self::JSON_FORMAT
+        );
 
-        $errors = $validator->validate($data);
+        $errors = $validator->validate($client);
         if (count($errors) > 0) {
             return $this->json($errors, 400);
         }
 
         $em = $this->getDoctrine()->getManager();
-
-        $client = new Client();
-        $client->setName($data->getName());
-        $client->setEmail($data->getEmail());
-        $client->setPhone($data->getPhone());
-        $client->setAddress($data->getAddress());
-        $client->setAvatar($data->getAvatar());
-
         $em->persist($client);
         try {
             $em->flush();
         } catch (\Exception $e) {
-            return $this->json($e->getMessage());
+            return $this->json($e->getMessage(), 400);
         }
 
         return $this->json($client);
@@ -85,26 +80,29 @@ class ClientsController extends Controller
     public function updatePUT(Request $request, ValidatorInterface $validator, Client $client)
     {
         $serializer = $this->get('serializer');
-        /** @var Client $data */
-        $data = $serializer->deserialize($request->getContent(), Client::class, self::JSON_FORMAT, []);
+        /** @var Client $updatedClient */
+        $updatedClient = $serializer->deserialize(
+            $request->getContent(),
+            Client::class,
+            self::JSON_FORMAT
+        );
 
-        $errors = $validator->validate($data);
+        $errors = $validator->validate($updatedClient);
         if (count($errors) > 0) {
             return $this->json($errors, 400);
         }
 
+        $client->setName($updatedClient->getName())
+            ->setEmail($updatedClient->getEmail())
+            ->setPhone($updatedClient->getPhone())
+            ->setAddress($updatedClient->getAddress())
+            ->setAvatar($updatedClient->getAvatar());
+
         $em = $this->getDoctrine()->getManager();
-
-        $client->setName($data->getName());
-        $client->setEmail($data->getEmail());
-        $client->setPhone($data->getPhone());
-        $client->setAddress($data->getAddress());
-        $client->setAvatar($data->getAvatar());
-
         try {
             $em->flush();
         } catch (\Exception $e) {
-            return $this->json($e->getMessage());
+            return $this->json($e->getMessage(), 400);
         }
 
         return $this->json($client);
@@ -121,27 +119,30 @@ class ClientsController extends Controller
     public function updatePATCH(Request $request, ValidatorInterface $validator, Client $client)
     {
         $serializer = $this->get('serializer');
-        /** @var Client $data */
-        $data = $serializer->deserialize($request->getContent(), Client::class, self::JSON_FORMAT, []);
+        /** @var Client $updatedClient */
+        $updatedClient = $serializer->deserialize(
+            $request->getContent(),
+            Client::class,
+            self::JSON_FORMAT
+        );
 
-        $errors = $validator->validate($data);
+        $errors = $validator->validate($updatedClient);
         if (count($errors) > 0) {
             return $this->json($errors, 400);
         }
 
+        // TODO: implement PATCH logic
+        $client->setName($updatedClient->getName())
+            ->setEmail($updatedClient->getEmail())
+            ->setPhone($updatedClient->getPhone())
+            ->setAddress($updatedClient->getAddress())
+            ->setAvatar($updatedClient->getAvatar());
+
         $em = $this->getDoctrine()->getManager();
-
-        //@TODO: implement PATCH logic
-        $client->setName($data->getName());
-        $client->setEmail($data->getEmail());
-        $client->setPhone($data->getPhone());
-        $client->setAddress($data->getAddress());
-        $client->setAvatar($data->getAvatar());
-
         try {
             $em->flush();
         } catch (\Exception $e) {
-            return $this->json($e->getMessage());
+            return $this->json($e->getMessage(), 400);
         }
 
         return $this->json($client);
@@ -162,7 +163,7 @@ class ClientsController extends Controller
         try {
             $em->flush();
         } catch (\Exception $e) {
-            return $this->json($e->getMessage());
+            return $this->json($e->getMessage(), 400);
         }
 
         return $this->json(null, 204);
