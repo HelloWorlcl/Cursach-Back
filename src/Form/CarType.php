@@ -19,9 +19,9 @@ class CarType extends AbstractType
         $builder
             ->add('mark', TextType::class, ['required' => true])
             ->add('model', TextType::class, ['required' => true])
-            ->add('releaseYear', IntegerType::class)
+            ->add('release_year', IntegerType::class)
             ->add('mileage', IntegerType::class)
-            ->add('engineCapacity', IntegerType::class)
+            ->add('engine_capacity', IntegerType::class)
             ->add('fuel', ChoiceType::class, [
                 'choices' => [
                     'petrol', 'diesel', 'gas', 'electric', 'hybrid', 'other'
@@ -32,7 +32,7 @@ class CarType extends AbstractType
                     'manual', 'automatic', 'automated_manual', 'continuously_variable', 'other'
                 ]
             ])
-            ->add('driveUnit', ChoiceType::class, [
+            ->add('drive_unit', ChoiceType::class, [
                 'choices' => [
                     'front-wheel', 'rear', 'four-wheel', 'other'
                 ]
@@ -45,6 +45,7 @@ class CarType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Car::class,
+            'allow_extra_fields' => true
         ]);
     }
 }

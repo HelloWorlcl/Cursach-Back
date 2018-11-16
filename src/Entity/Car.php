@@ -32,9 +32,9 @@ class Car
     private $model;
 
     /**
-     * @var \DateTimeInterface
+     * @var string
      *
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $releaseYear;
 
@@ -91,9 +91,9 @@ class Car
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getMark(): string
+    public function getMark(): ?string
     {
         return $this->mark;
     }
@@ -111,9 +111,9 @@ class Car
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getModel(): string
+    public function getModel(): ?string
     {
         return $this->model;
     }
@@ -131,19 +131,19 @@ class Car
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return string|null
      */
-    public function getReleaseYear(): ?\DateTimeInterface
+    public function getReleaseYear(): ?string
     {
         return $this->releaseYear;
     }
 
     /**
-     * @param \DateTimeInterface|null $release_year
+     * @param string|null $release_year
      *
      * @return Car
      */
-    public function setReleaseYear(?\DateTimeInterface $releaseYear): Car
+    public function setReleaseYear(?string $releaseYear): Car
     {
         $this->releaseYear = $releaseYear;
 
@@ -243,9 +243,9 @@ class Car
     }
 
     /**
-     * @return Client
+     * @return Client|null
      */
-    public function getOwner(): Client
+    public function getOwner(): ?Client
     {
         return $this->owner;
     }
@@ -255,7 +255,7 @@ class Car
      *
      * @return Car
      */
-    public function setOwner(Client $client): Car
+    public function setOwner(?Client $client): Car
     {
         $this->owner = $client;
 
