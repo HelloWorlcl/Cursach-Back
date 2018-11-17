@@ -11,16 +11,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ClientsController extends Controller
+class ClientsController extends Controller implements ControllerInterface
 {
-    const JSON_FORMAT = 'json';
-
     /**
      * @return Response
      *
      * @Route("clients", methods={"GET"}, name="clients_get")
      */
-    public function index()
+    public function index(): Response
     {
         $repository = $this->getDoctrine()->getRepository(Client::class);
 
@@ -34,7 +32,7 @@ class ClientsController extends Controller
      *
      * @Route("clients/{id}", methods={"GET"}, name="client_show", requirements={"id"="\d+"})
      */
-    public function show(Client $client)
+    public function show(Client $client): Response
     {
         return $this->json($client);
     }
@@ -47,7 +45,7 @@ class ClientsController extends Controller
      *
      * @Route("clients", methods={"POST"}, name="client_new")
      */
-    public function new(Request $request, SerializerInterface $serializer)
+    public function new(Request $request, SerializerInterface $serializer): Response
     {
         $data = $serializer->decode($request->getContent(), self::JSON_FORMAT);
 
@@ -79,8 +77,11 @@ class ClientsController extends Controller
      *
      * @Route("clients/{id}", methods={"PUT"}, name="client_edit_put", requirements={"id"="\d+"})
      */
-    public function updatePUT(Request $request, SerializerInterface $serializer, Client $client)
-    {
+    public function updatePUT(
+        Request $request,
+        SerializerInterface $serializer,
+        Client $client
+    ): Response {
         $data = $serializer->decode($request->getContent(), self::JSON_FORMAT);
 
         $form = $this->createForm(ClientType::class, $client);
@@ -108,8 +109,11 @@ class ClientsController extends Controller
      *
      * @Route("clients/{id}", methods={"PATCH"}, name="client_edit_patch", requirements={"id"="\d+"})
      */
-    public function updatePATCH(Request $request, SerializerInterface $serializer, Client $client)
-    {
+    public function updatePATCH(
+        Request $request,
+        SerializerInterface $serializer,
+        Client $client
+    ): Response {
         $data = $serializer->decode($request->getContent(), self::JSON_FORMAT);
 
         $form = $this->createForm(ClientType::class, $client);
@@ -135,7 +139,7 @@ class ClientsController extends Controller
      *
      * @Route("clients/{id}", methods={"DELETE"}, name="client_delete", requirements={"id"="\d+"})
      */
-    public function delete(Client $client)
+    public function delete(Client $client): Response
     {
         $em = $this->getDoctrine()->getManager();
         $em->remove($client);

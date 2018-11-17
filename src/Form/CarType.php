@@ -11,14 +11,25 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CarType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('mark', TextType::class, ['required' => true])
-            ->add('model', TextType::class, ['required' => true])
+            ->add('mark', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank()
+                ]
+            ])
+            ->add('model', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank()
+                ]
+            ])
             ->add('release_year', IntegerType::class)
             ->add('mileage', IntegerType::class)
             ->add('engine_capacity', IntegerType::class)
