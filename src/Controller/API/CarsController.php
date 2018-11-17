@@ -80,7 +80,7 @@ class CarsController extends AbstractController implements ControllerInterface
      *
      * @return Response
      *
-     * @Route("cars/{id}", methods={"PUT"}, name="car_edit", requirements={"id"="\d+"})
+     * @Route("cars/{id}", methods={"PATCH"}, name="car_edit", requirements={"id"="\d+"})
      */
     public function update(Request $request, SerializerInterface $serializer, Car $car): Response
     {
@@ -88,7 +88,7 @@ class CarsController extends AbstractController implements ControllerInterface
         $data = $serializer->decode($request->getContent(), self::JSON_FORMAT);
 
         $form = $this->createForm(CarType::class, $car);
-        $form->submit($data);
+        $form->submit($data, false);
         if (!$form->isValid()) {
             return $this->json($form->getErrors(true)->current()->getMessageParameters(), 400);
         }
