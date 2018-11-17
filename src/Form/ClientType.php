@@ -18,8 +18,8 @@ class ClientType extends AbstractType
     {
         $builder
             ->add('name', null, ['required' => true])
-            ->add('email', EmailType::class)
-            ->add('phone', TelType::class, ['required' => true])
+            ->add('email', null)
+            ->add('phone', null, ['required' => true])
             ->add('address')
             ->add('avatar')
         ;

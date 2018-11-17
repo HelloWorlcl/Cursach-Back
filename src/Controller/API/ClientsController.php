@@ -3,10 +3,12 @@
 namespace App\Controller\API;
 
 use App\Entity\Client;
+use App\Form\ClientType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ClientsController extends Controller
@@ -39,26 +41,24 @@ class ClientsController extends Controller
 
     /**
      * @param Request $request
+     * @param SerializerInterface $serializer
      *
      * @return Response
      *
      * @Route("clients", methods={"POST"}, name="client_new")
      */
-    public function new(Request $request, ValidatorInterface $validator)
+    public function new(Request $request, SerializerInterface $serializer)
     {
-        $serializer = $this->get('serializer');
-        $client = $serializer->deserialize(
-            $request->getContent(),
-            Client::class,
-            self::JSON_FORMAT
-        );
+        $data = $serializer->decode($request->getContent(), self::JSON_FORMAT);
 
-        $errors = $validator->validate($client);
-        if (count($errors) > 0) {
-            return $this->json($errors, 400);
+        $form = $this->createForm(ClientType::class, new Client());
+        $form->submit($data);
+        if (!$form->isValid()) {
+            return $this->json($form->getErrors(true)->current()->getMessageParameters(), 400);
         }
 
         $em = $this->getDoctrine()->getManager();
+        $client = $form->getData();
         $em->persist($client);
         try {
             $em->flush();
@@ -71,32 +71,23 @@ class ClientsController extends Controller
 
     /**
      * @param Request $request
+     * @param SerializerInterface $serializer
+     * @param ValidatorInterface $validator
      * @param Client $client
      *
      * @return Response
      *
      * @Route("clients/{id}", methods={"PUT"}, name="client_edit_put", requirements={"id"="\d+"})
      */
-    public function updatePUT(Request $request, ValidatorInterface $validator, Client $client)
+    public function updatePUT(Request $request, SerializerInterface $serializer, Client $client)
     {
-        $serializer = $this->get('serializer');
-        /** @var Client $updatedClient */
-        $updatedClient = $serializer->deserialize(
-            $request->getContent(),
-            Client::class,
-            self::JSON_FORMAT
-        );
+        $data = $serializer->decode($request->getContent(), self::JSON_FORMAT);
 
-        $errors = $validator->validate($updatedClient);
-        if (count($errors) > 0) {
-            return $this->json($errors, 400);
+        $form = $this->createForm(ClientType::class, $client);
+        $form->submit($data);
+        if (!$form->isValid()) {
+            return $this->json($form->getErrors(true)->current()->getMessageParameters(), 400);
         }
-
-        $client->setName($updatedClient->getName())
-            ->setEmail($updatedClient->getEmail())
-            ->setPhone($updatedClient->getPhone())
-            ->setAddress($updatedClient->getAddress())
-            ->setAvatar($updatedClient->getAvatar());
 
         $em = $this->getDoctrine()->getManager();
         try {
@@ -110,33 +101,22 @@ class ClientsController extends Controller
 
     /**
      * @param Request $request
+     * @param SerializerInterface $serializer
      * @param Client $client
      *
      * @return Response
      *
      * @Route("clients/{id}", methods={"PATCH"}, name="client_edit_patch", requirements={"id"="\d+"})
      */
-    public function updatePATCH(Request $request, ValidatorInterface $validator, Client $client)
+    public function updatePATCH(Request $request, SerializerInterface $serializer, Client $client)
     {
-        $serializer = $this->get('serializer');
-        /** @var Client $updatedClient */
-        $updatedClient = $serializer->deserialize(
-            $request->getContent(),
-            Client::class,
-            self::JSON_FORMAT
-        );
+        $data = $serializer->decode($request->getContent(), self::JSON_FORMAT);
 
-        $errors = $validator->validate($updatedClient);
-        if (count($errors) > 0) {
-            return $this->json($errors, 400);
+        $form = $this->createForm(ClientType::class, $client);
+        $form->submit($data, false);
+        if (!$form->isValid()) {
+            return $this->json($form->getErrors(true)->current()->getMessageParameters(), 400);
         }
-
-        // TODO: implement PATCH logic
-        $client->setName($updatedClient->getName())
-            ->setEmail($updatedClient->getEmail())
-            ->setPhone($updatedClient->getPhone())
-            ->setAddress($updatedClient->getAddress())
-            ->setAvatar($updatedClient->getAvatar());
 
         $em = $this->getDoctrine()->getManager();
         try {

@@ -71,11 +71,11 @@ class Client
     }
 
     /**
-     * @param string $name
+     * @param null|string $name
      *
      * @return Client
      */
-    public function setName(string $name): Client
+    public function setName(?string $name): Client
     {
         $this->name = $name;
 
@@ -111,11 +111,11 @@ class Client
     }
 
     /**
-     * @param string $phone
+     * @param null|string $phone
      *
      * @return Client
      */
-    public function setPhone(string $phone): Client
+    public function setPhone(?string $phone): Client
     {
         $this->phone = $phone;
 
