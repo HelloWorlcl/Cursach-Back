@@ -78,7 +78,7 @@ class Car
     /**
      * @var Client
      *
-     * @ORM\ManyToOne(targetEntity="Client")
+     * @ORM\ManyToOne(targetEntity="Client", inversedBy="cars", cascade={"persist"})
      */
     private $owner;
 
