@@ -75,7 +75,7 @@ class Client
      *
      * @return Client
      */
-    public function setName(?string $name): Client
+    public function setName(string $name): Client
     {
         $this->name = $name;
 
@@ -115,7 +115,7 @@ class Client
      *
      * @return Client
      */
-    public function setPhone(?string $phone): Client
+    public function setPhone(string $phone): Client
     {
         $this->phone = $phone;
 
