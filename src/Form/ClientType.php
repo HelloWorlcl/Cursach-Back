@@ -21,7 +21,7 @@ class ClientType extends AbstractType
                     new NotBlank()
                 ]
             ])
-            ->add('email', EmailType::class, null)
+            ->add('email', EmailType::class)
             ->add('phone', TelType::class, [
                 'required' => true,
                 'constraints' => [
